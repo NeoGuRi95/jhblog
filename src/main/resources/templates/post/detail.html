@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/layout.html}">
+
+<head>
+    <title>글 내용</title>
+</head>
+
+<body>
+<main layout:fragment="main">
+    <section class="section section-write container mx-auto">
+
+        <div class="px-2 pt-4">
+            <div class="flex flex-col mt-2 gap-3">
+                <div>
+                    <button type="button" onclick="history.back();" class="btn btn-secondary btn-sm  btn-outline">
+                        <i class="fa-solid fa-angle-left"></i>
+                        <span class="ml-1">이전</span>
+                    </button>
+                </div>
+
+                <div>
+                    <h2 class="font-bold" th:text="${post.postSubject}"></h2>
+                </div>
+
+                <div class="flex flex-wrap gap-3">
+                    <div class="flex flex-wrap gap-3">
+                        <div>
+                            <div class="badge">
+                                <span class="ml-1">작성</span>
+                                <span class="ml-1"
+                                      th:text="${#temporals.format(post.postCreateDate, 'yy-MM-dd HH:mm')}"></span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="badge badge-outline">
+                                <span class="ml-1">수정</span>
+                                <span class="ml-1"
+                                      th:text="${#temporals.format(post.postModifyDate, 'yy-MM-dd HH:mm')}"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+               <div class="toast-ui-viewer">
+                   <script type="text/x-template" th:utext="${post.postContent}"></script>
+               </div>
+            </div>
+        </div>
+    </section>
+
+    <th:block th:replace="fragment/toastEditor :: toastEditor"></th:block>
+
+</main>
+</body>
+</html>

@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    url: jdbc:mariadb://127.0.0.1:3306/jhblog?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul
+    username: root
+    password: 'root'
+custom:
+  site:
+    name: JeaHyun's Blog
+    baseUrl: "http://localhost:8080"
+  file:
+    dir: C:/Users/jea5158/Desktop/jhblog/src/main/resources/static

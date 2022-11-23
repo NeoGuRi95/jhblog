@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/html">
+
+<body>
+<th:block th:fragment="postListItem">
+    <div class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+            <h2 class="card-title flex flex-wrap">
+                <div class="flex">
+                    <img class="post-img" th:src="@{/image/{imageFile}(imageFile=${post.postImageStoreFileName})}">
+                </div>
+                <a th:href="@{|/post/${post.postId}|}" class="mr-auto">
+                    <span th:text="${post.postSubject}"></span>
+                </a>
+            </h2>
+            <div class="flex justify-end">
+                <div class="badge badge-outline">
+                    <i class="fa-solid fa-pen"></i>
+                    <span class="ml-2"
+                          th:text="${#temporals.format(post.postCreateDate, 'yy-MM-dd HH:mm')}"></span>
+                </div>
+            </div>
+            <div th:if="${post.postCreateDate != post.postModifyDate}" class="flex justify-end">
+                <div class="badge">
+                    <i class="fa-solid fa-eraser"></i>
+                    <span class="ml-2"
+                          th:text="${#temporals.format(post.postModifyDate, 'yy-MM-dd HH:mm')}"></span>
+                </div>
+            </div>
+            <div class="card-actions justify-end">
+                <form th:action="@{|/post/${post.postId}|}" method="#" th:method="DELETE">
+                    <button class="btn btn-sm">
+                        <span>삭제</span>
+                    </button>
+                </form>
+                <a th:href="@{|/post/${post.postId}|}" class="btn btn-sm">
+                    <span>보기</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</th:block>
+</body>
+
+</html>
