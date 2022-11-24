@@ -1,6 +1,6 @@
 package net.wogus.jhblog.app.attachment;
 
-import net.wogus.jhblog.app.attachment.dto.Attachment;
+import net.wogus.jhblog.app.attachment.dto.AttachmentDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,18 +20,18 @@ public class FileStore {
         return fileDirPath + "images/" + storeFilename;
     }
 
-    public List<Attachment> storeFiles(List<MultipartFile> multipartFiles) throws IOException {
-        List<Attachment> attachments = new ArrayList<>();
+    public List<AttachmentDto> storeFiles(List<MultipartFile> multipartFiles) throws IOException {
+        List<AttachmentDto> attachmentDtos = new ArrayList<>();
         for (MultipartFile multipartFile : multipartFiles) {
             if (!multipartFile.isEmpty()) {
-                attachments.add(storeFile(multipartFile));
+                attachmentDtos.add(storeFile(multipartFile));
             }
         }
 
-        return attachments;
+        return attachmentDtos;
     }
 
-    public Attachment storeFile(MultipartFile multipartFile) throws IOException {
+    public AttachmentDto storeFile(MultipartFile multipartFile) throws IOException {
         if (multipartFile.isEmpty()) {
             return null;
         }
@@ -40,7 +40,7 @@ public class FileStore {
         String storeFilename = createStoreFilename(originalFilename);
         multipartFile.transferTo(new File(createPath(storeFilename)));
 
-        return Attachment.builder()
+        return AttachmentDto.builder()
                 .orgFileName(originalFilename)
                 .storePath(storeFilename)
                 .build();

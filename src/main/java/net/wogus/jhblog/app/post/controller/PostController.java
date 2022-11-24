@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.wogus.jhblog.app.attachment.service.AttachmentService;
 import net.wogus.jhblog.app.base.Rq;
-import net.wogus.jhblog.app.post.dto.Post;
+import net.wogus.jhblog.app.post.dto.PostDto;
 import net.wogus.jhblog.app.post.service.PostService;
 import net.wogus.jhblog.app.post.form.PostForm;
 import org.springframework.stereotype.Controller;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -31,22 +32,24 @@ public class PostController {
 
     @PostMapping("/write")
     public String write(@Valid PostForm postForm) throws IOException {
-        long postId = postService.write(postForm.getSubject(), postForm.getContent(), postForm.getContentHtml());
-        attachmentService.saveAttachment(postForm.getImageFile(), postId);
+        long postId = postService.write(postForm.getSubject(), postForm.getContent(), postForm.getContentHtml(), postForm.getImageFile());
         return Rq.redirectWithMsg("/post/" + postId, "%d번 글이 생성되었습니다.".formatted(postId));
     }
 
     @GetMapping("/{id}")
     public String detail(@PathVariable Long id, Model model) {
-        Post post = postService.getArticleById(id);
-        model.addAttribute("post", post);
-        return "post/detail";
+        Optional<PostDto> _postDto = postService.getArticleById(id);
+        if (_postDto.isPresent()) {
+            model.addAttribute("post", _postDto.get());
+            return "post/detail";
+        }
+        return "post/list";
     }
 
     @GetMapping("/list")
     public String showList(Model model) {
-        List<Post> posts = postService.getArticles();
-        model.addAttribute("posts", posts);
+        List<PostDto> postDtos = postService.getPosts();
+        model.addAttribute("posts", postDtos);
         return "post/list";
     }
 

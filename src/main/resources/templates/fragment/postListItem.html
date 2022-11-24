@@ -9,7 +9,7 @@
                 <div class="flex">
                     <img class="post-img" th:src="@{/image/{imageFile}(imageFile=${post.postImageStoreFileName})}">
                 </div>
-                <a th:href="@{|/post/${post.postId}|}" class="mr-auto">
+                <a th:href="@{|/post/${post.id}|}" class="mr-auto">
                     <span th:text="${post.postSubject}"></span>
                 </a>
             </h2>
@@ -17,23 +17,23 @@
                 <div class="badge badge-outline">
                     <i class="fa-solid fa-pen"></i>
                     <span class="ml-2"
-                          th:text="${#temporals.format(post.postCreateDate, 'yy-MM-dd HH:mm')}"></span>
+                          th:text="${#temporals.format(post.postCreateDate, 'yy-MM-dd')}"></span>
                 </div>
             </div>
             <div th:if="${post.postCreateDate != post.postModifyDate}" class="flex justify-end">
                 <div class="badge">
                     <i class="fa-solid fa-eraser"></i>
                     <span class="ml-2"
-                          th:text="${#temporals.format(post.postModifyDate, 'yy-MM-dd HH:mm')}"></span>
+                          th:text="${#temporals.format(post.postModifyDate, 'yy-MM-dd')}"></span>
                 </div>
             </div>
             <div class="card-actions justify-end">
-                <form th:action="@{|/post/${post.postId}|}" method="#" th:method="DELETE">
+                <form th:action="@{|/post/${post.id}|}" method="#" th:method="DELETE">
                     <button class="btn btn-sm">
                         <span>삭제</span>
                     </button>
                 </form>
-                <a th:href="@{|/post/${post.postId}|}" class="btn btn-sm">
+                <a th:href="@{|/post/${post.id}|}" class="btn btn-sm">
                     <span>보기</span>
                 </a>
             </div>

@@ -26,17 +26,17 @@
                     <div class="flex flex-wrap gap-3">
                         <div>
                             <div class="badge">
-                                <span class="ml-1">작성</span>
+                                <span class="ml-1">작성: </span>
                                 <span class="ml-1"
-                                      th:text="${#temporals.format(post.postCreateDate, 'yy-MM-dd HH:mm')}"></span>
+                                      th:text="${#temporals.format(post.postCreateDate, 'yy-MM-dd')}"></span>
                             </div>
                         </div>
 
                         <div>
                             <div class="badge badge-outline">
-                                <span class="ml-1">수정</span>
+                                <span class="ml-1">수정: </span>
                                 <span class="ml-1"
-                                      th:text="${#temporals.format(post.postModifyDate, 'yy-MM-dd HH:mm')}"></span>
+                                      th:text="${#temporals.format(post.postModifyDate, 'yy-MM-dd')}"></span>
                             </div>
                         </div>
                     </div>
