@@ -25,18 +25,20 @@ public class PostService {
     private final AttachmentRepository attachmentRepository;
     private final FileStore fileStore;
 
+    /*전체 게시글 조회*/
     public List<PostDto> getPosts() {
         List<PostDto> postDtoList = new ArrayList<>();
         List<Post> postList = postRepository.findAll();
 
         for (Post post : postList) {
+            if (post.isDeleted()) continue;
             PostDto postDto = post.toDto();
             // 대표 이미지 찾기
             Optional<List<Attachment>> _attachmentList = attachmentRepository.findAllByPostId(postDto.getId());
             if (_attachmentList.isPresent()) {
                 List<Attachment> attachmentList = _attachmentList.get();
                 Attachment attachment = attachmentList.get(0);
-                postDto.setPostImageStoreFileName(attachment.getStoreFileName());
+                postDto.setImageStoreFileName(attachment.getStoreFileName());
             }
             postDtoList.add(postDto);
         }
@@ -44,10 +46,10 @@ public class PostService {
         return postDtoList;
     }
 
+    /*게시글 저장*/
     @Transactional
-    public long write(String subject, String content, String contentHtml, MultipartFile multipartFile) throws IOException {
-        /*게시글 저장*/
-        Post post = new Post(subject, content, contentHtml);
+    public long write(String subject, String content, MultipartFile multipartFile) throws IOException {
+        Post post = new Post(subject, content);
 
         /*썸네일 이미지 저장*/
         AttachmentDto imageFile = fileStore.storeFile(multipartFile);
@@ -57,7 +59,8 @@ public class PostService {
         return postRepository.save(post).getId();
     }
 
-    public Optional<PostDto> getArticleById(long id) {
+    /*특정 게시글 조회*/
+    public Optional<PostDto> getArticleById(Long id) {
         Optional<Post> _post = postRepository.findById(id);
         PostDto postDto = null;
 
@@ -68,9 +71,21 @@ public class PostService {
         return Optional.ofNullable(postDto);
     }
 
+    /*게시글 삭제(isDeleted 컬럼 수정)*/
     @Transactional
-    public void updateIsDeletedById(long id) {
+    public void updateIsDeletedById(Long id) {
         Optional<Post> _post = postRepository.findById(id);
         _post.ifPresent(post -> post.setDeleted(true));
+    }
+
+    /*게시글 수정(제목, 내용)*/
+    @Transactional
+    public void updatePost(Long id, String subject, String content) {
+        Optional<Post> _post = postRepository.findById(id);
+        if (_post.isPresent()) {
+            Post post = _post.get();
+            post.setPostSubject(subject);
+            post.setPostContent(content);
+        }
     }
 }

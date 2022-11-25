@@ -12,15 +12,12 @@ public class PostForm {
     private String subject;
     @NotBlank
     private String content;
-    @NotBlank
-    private String contentHtml;
     private MultipartFile imageFile;
 
     @Builder
-    public PostForm(String subject, String content, String contentHtml, MultipartFile imageFile) {
+    public PostForm(String subject, String content, MultipartFile imageFile) {
         this.subject = subject;
         this.content = content;
-        this.contentHtml = contentHtml;
         this.imageFile = imageFile;
     }
 

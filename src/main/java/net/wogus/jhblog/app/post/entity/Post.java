@@ -31,9 +31,6 @@ public class Post extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String postContent;
 
-    @Column(columnDefinition = "TEXT")
-    private String postContentHtml;
-
     private boolean isDeleted;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
@@ -42,10 +39,9 @@ public class Post extends BaseEntity {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private Set<Attachment> attachments;
 
-    public Post(String subject, String content, String contentHtml) {
+    public Post(String subject, String content) {
         this.postSubject = subject;
         this.postContent = content;
-        this.postContentHtml = contentHtml;
         this.isDeleted = false;
         this.replys = new LinkedHashSet<>();
         this.attachments = new LinkedHashSet<>();
@@ -53,12 +49,11 @@ public class Post extends BaseEntity {
 
     public PostDto toDto() {
         PostDto postDto = new PostDto();
-        postDto.setPostCreateDate(this.getCreateDate());
-        postDto.setPostModifyDate(this.getModifyDate());
+        postDto.setCreateDate(this.getCreateDate());
+        postDto.setModifyDate(this.getModifyDate());
         postDto.setId(this.id);
-        postDto.setPostSubject(this.postSubject);
-        postDto.setPostContent(this.postContent);
-        postDto.setPostContentHtml(this.postContentHtml);
+        postDto.setSubject(this.postSubject);
+        postDto.setContent(this.postContent);
         postDto.setDeleted(this.isDeleted);
         return postDto;
     }

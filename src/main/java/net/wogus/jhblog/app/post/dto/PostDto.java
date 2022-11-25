@@ -7,11 +7,10 @@ import java.time.LocalDateTime;
 @Data
 public class PostDto {
     private long id;
-    private LocalDateTime postCreateDate;
-    private LocalDateTime postModifyDate;
-    private String postSubject;
-    private String postContent;
-    private String postContentHtml;
-    private String postImageStoreFileName;
+    private LocalDateTime createDate;
+    private LocalDateTime modifyDate;
+    private String subject;
+    private String content;
+    private String imageStoreFileName;
     private boolean isDeleted;
 }

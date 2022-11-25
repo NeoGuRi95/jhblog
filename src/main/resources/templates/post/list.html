@@ -2,29 +2,20 @@
 <html layout:decorate="~{layout/layout.html}">
 
 <head>
-    <title>내 목록</title>
+    <title>글 목록</title>
 </head>
 
 <body>
 <main layout:fragment="main">
-    <section class="section section-postDto-list container mx-auto">
-
-        <div class="px-2 pt-4">
-            <h1 class="font-bold text-lg">
-                <i class="fa-solid fa-rectangle-list"></i>
-                글 목록
-            </h1>
-
-            <div class="mt-2">
-                <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
-                    <li th:each="post : ${posts}">
-                        <th:block th:replace="fragment/postListItem :: postListItem" ></th:block>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </section>
-
+    <div class="list-group m-5">
+        <th:block th:each="post : ${posts}">
+            <a th:href="@{|/post/${post.id}|}" class="list-group-item">
+                <span th:text="${post.id}"></span>
+                <span th:text="${post.subject}"></span>
+                <span class="badge">12</span>
+            </a>
+        </th:block>
+    </div>
 </main>
 </body>
 </html>

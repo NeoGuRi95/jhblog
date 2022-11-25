@@ -7,24 +7,24 @@
         <div class="card-body">
             <h2 class="card-title flex flex-wrap">
                 <div class="flex">
-                    <img class="post-img" th:src="@{/image/{imageFile}(imageFile=${post.postImageStoreFileName})}">
+                    <img class="post-img" th:src="@{/image/{imageFile}(imageFile=${post.imageStoreFileName})}">
                 </div>
                 <a th:href="@{|/post/${post.id}|}" class="mr-auto">
-                    <span th:text="${post.postSubject}"></span>
+                    <span th:text="${post.subject}"></span>
                 </a>
             </h2>
             <div class="flex justify-end">
                 <div class="badge badge-outline">
                     <i class="fa-solid fa-pen"></i>
                     <span class="ml-2"
-                          th:text="${#temporals.format(post.postCreateDate, 'yy-MM-dd')}"></span>
+                          th:text="${#temporals.format(post.createDate, 'yy-MM-dd')}"></span>
                 </div>
             </div>
-            <div th:if="${post.postCreateDate != post.postModifyDate}" class="flex justify-end">
+            <div th:if="${post.createDate != post.modifyDate}" class="flex justify-end">
                 <div class="badge">
                     <i class="fa-solid fa-eraser"></i>
                     <span class="ml-2"
-                          th:text="${#temporals.format(post.postModifyDate, 'yy-MM-dd')}"></span>
+                          th:text="${#temporals.format(post.modifyDate, 'yy-MM-dd')}"></span>
                 </div>
             </div>
             <div class="card-actions justify-end">

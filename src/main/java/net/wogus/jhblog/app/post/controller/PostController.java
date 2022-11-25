@@ -2,7 +2,6 @@ package net.wogus.jhblog.app.post.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.wogus.jhblog.app.attachment.service.AttachmentService;
 import net.wogus.jhblog.app.base.Rq;
 import net.wogus.jhblog.app.post.dto.PostDto;
 import net.wogus.jhblog.app.post.service.PostService;
@@ -23,7 +22,6 @@ import java.util.Optional;
 public class PostController {
 
     private final PostService postService;
-    private final AttachmentService attachmentService;
 
     @GetMapping("/write")
     public String showWrite() {
@@ -32,7 +30,7 @@ public class PostController {
 
     @PostMapping("/write")
     public String write(@Valid PostForm postForm) throws IOException {
-        long postId = postService.write(postForm.getSubject(), postForm.getContent(), postForm.getContentHtml(), postForm.getImageFile());
+        long postId = postService.write(postForm.getSubject(), postForm.getContent(), postForm.getImageFile());
         return Rq.redirectWithMsg("/post/" + postId, "%d번 글이 생성되었습니다.".formatted(postId));
     }
 
@@ -57,5 +55,15 @@ public class PostController {
     public String delete(@PathVariable Long id) {
         postService.updateIsDeletedById(id);
         return "redirect:/post/list";
+    }
+
+    @GetMapping("/modify/{id}")
+    public String showModify(@PathVariable Long id, Model model) {
+        Optional<PostDto> _postDto = postService.getArticleById(id);
+        if (_postDto.isPresent()) {
+            model.addAttribute("post", _postDto.get());
+            return "post/modify";
+        }
+        return "post/list";
     }
 }
