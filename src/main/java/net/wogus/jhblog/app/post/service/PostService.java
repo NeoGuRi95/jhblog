@@ -33,13 +33,13 @@ public class PostService {
         for (Post post : postList) {
             if (post.isDeleted()) continue;
             PostDto postDto = post.toDto();
-            // 대표 이미지 찾기
+            /*// 대표 이미지 찾기
             Optional<List<Attachment>> _attachmentList = attachmentRepository.findAllByPostId(postDto.getId());
             if (_attachmentList.isPresent()) {
                 List<Attachment> attachmentList = _attachmentList.get();
                 Attachment attachment = attachmentList.get(0);
                 postDto.setImageStoreFileName(attachment.getStoreFileName());
-            }
+            }*/
             postDtoList.add(postDto);
         }
 
@@ -80,12 +80,20 @@ public class PostService {
 
     /*게시글 수정(제목, 내용)*/
     @Transactional
-    public void updatePost(Long id, String subject, String content) {
+    public Optional<PostDto> updatePost(Long id, String subject, String content, MultipartFile multipartFile) throws IOException {
         Optional<Post> _post = postRepository.findById(id);
+        PostDto postDto = null;
         if (_post.isPresent()) {
             Post post = _post.get();
             post.setPostSubject(subject);
             post.setPostContent(content);
+            /*썸네일 이미지 저장*/
+            AttachmentDto imageFile = fileStore.storeFile(multipartFile);
+            Attachment attachment = new Attachment(imageFile);
+            post.addAttachment(attachment);
+            postDto = post.toDto();
         }
+
+        return Optional.ofNullable(postDto);
     }
 }

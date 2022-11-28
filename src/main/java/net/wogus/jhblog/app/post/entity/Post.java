@@ -12,6 +12,7 @@ import javax.persistence.*;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -55,6 +56,11 @@ public class Post extends BaseEntity {
         postDto.setSubject(this.postSubject);
         postDto.setContent(this.postContent);
         postDto.setDeleted(this.isDeleted);
+        postDto.setImageStoreFileName(
+                this.attachments.stream()
+                        .map(Attachment::getStoreFileName)
+                        .collect(Collectors.toSet())
+        );
         return postDto;
     }
 

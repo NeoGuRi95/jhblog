@@ -7,93 +7,42 @@
 
 <body>
 <main layout:fragment="main">
-    <section class="section section-write container mx-auto">
-
-        <div class="px-2 pt-4">
-            <h1 class="font-bold text-lg">
-                <i class="fa-solid fa-pen"></i>
-                글 작성
-            </h1>
-
-            <script>
-                let PostWrite__submitDone = false;
-
-                function PostWrite__submit(form) {
-                    if (PostWrite__submitDone) {
-                        return;
-                    }
-
-                    form.subject.value = form.subject.value.trim();
-
-                    if (form.subject.value.length == 0) {
-                        warningModal("제목을 입력해주세요.");
-                        form.subject.focus();
-
-                        return;
-                    }
-
-                    const editor = $(form).find(".toast-ui-editor").data("data-toast-editor");
-                    const markdown = editor.getMarkdown().trim();
-                    const html = editor.getHTML().trim();
-
-                    form.content.value = markdown;
-                    form.contentHtml.value = html;
-
-                    if (form.content.value.length == 0 || form.contentHtml.value.length == 0) {
-                        warningModal("내용을 입력해주세요");
-                        editor.focus();
-                        return;
-                    }
-
-                    form.submit();
-                    PostWrite__submitDone = true;
-                }
-            </script>
-
-
-            <form th:action method="POST" class="flex flex-col gap-3"
-                  enctype="multipart/form-data"
-                  onsubmit="PostWrite__submit(this); return false;">
-                <input type="hidden" name="content">
-                <input type="hidden" name="contentHtml">
-                <div class="form-control">
-                    <label class="label">
-                        <span class="label-text">제목</span>
-                    </label>
-                    <input autofocus type="text" name="subject" class="input input-bordered"
-                           maxlength="200" th:value="post.subject">
-                </div>
-
-                <div class="form-control">
-                    <label class="label">
-                        <span class="label-text">대표 이미지</span>
-                    </label>
-                    <input type="file" name="imageFile" accept="image/png, image/gif, image/jpeg">
-                </div>
-
-                <div class="form-control">
-                    <label class="label">
-                        <span class="label-text">내용</span>
-                    </label>
-                    <div class="toast-ui-editor" toast-ui-editor--height="calc(100vh)"></div>
-                </div>
-
-                <div class="grid grid-cols-2 mt-2 gap-2">
-                    <button type="button" onclick="history.back();" class="btn btn-secondary btn-outline">
-                        <i class="fa-solid fa-angle-left"></i>
-                        <span class="ml-1">취소</span>
-                    </button>
-                    <button class="btn btn-primary" type="submit">
-                        <i class="fa-solid fa-pen"></i>
-                        <span class="ml-1">작성</span>
-                    </button>
-                </div>
-            </form>
+    <form th:action="@{|/post/${post.id}|}" method="#" th:method="PATCH" enctype="multipart/form-data">
+        <div>
+            <label>
+                <span>제목</span>
+            </label>
+            <input autofocus type="text" name="subject" class="input" maxlength="100" th:value="${post.subject}">
         </div>
+        <div>
+            <label>
+                <span>대표 이미지</span>
+            </label>
+            <input type="file" name="imageFile" accept="image/png, image/gif, image/jpeg">
+        </div>
+        <div>
+            <label>
+                <span>내용</span>
+            </label>
+            <textarea name="content" class="summernote" th:text="${post.content}"></textarea>
+        </div>
+        <div class="mx-auto">
+            <button class="btn btn-danger" type="button" onclick="history.back();">
+                <span>취소</span>
+            </button>
+            <button class="btn btn-primary" type="submit">
+                <span>작성</span>
+            </button>
+        </div>
+    </form>
 
-    </section>
-
-    <th:block th:replace="fragment/toastEditor :: toastEditor"></th:block>
+    <script>
+      $('.summernote').summernote({
+        placeholder: 'Hello Bootstrap 4',
+        tabsize: 2,
+        height: 300
+      });
+    </script>
 
 </main>
 </body>

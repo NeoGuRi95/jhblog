@@ -34,6 +34,26 @@ public class PostController {
         return Rq.redirectWithMsg("/post/" + postId, "%d번 글이 생성되었습니다.".formatted(postId));
     }
 
+    @GetMapping("/updateForm/{id}")
+    public String showUpdateForm(@PathVariable Long id, Model model) {
+        Optional<PostDto> _postDto = postService.getArticleById(id);
+        if (_postDto.isPresent()) {
+            model.addAttribute("post", _postDto.get());
+            return "post/modify";
+        }
+        return "post/list";
+    }
+
+    @PatchMapping("/{id}")
+    public String update(@PathVariable Long id, Model model, @Valid PostForm postForm) throws IOException {
+        Optional<PostDto> _postDto = postService.updatePost(id, postForm.getSubject(), postForm.getContent(), postForm.getImageFile());
+        if (_postDto.isPresent()) {
+            model.addAttribute("post", _postDto.get());
+            return "post/detail";
+        }
+        return "post/list";
+    }
+
     @GetMapping("/{id}")
     public String detail(@PathVariable Long id, Model model) {
         Optional<PostDto> _postDto = postService.getArticleById(id);
@@ -44,26 +64,16 @@ public class PostController {
         return "post/list";
     }
 
-    @GetMapping("/list")
-    public String showList(Model model) {
-        List<PostDto> postDtos = postService.getPosts();
-        model.addAttribute("posts", postDtos);
-        return "post/list";
-    }
-
     @DeleteMapping("/{id}")
     public String delete(@PathVariable Long id) {
         postService.updateIsDeletedById(id);
         return "redirect:/post/list";
     }
 
-    @GetMapping("/modify/{id}")
-    public String showModify(@PathVariable Long id, Model model) {
-        Optional<PostDto> _postDto = postService.getArticleById(id);
-        if (_postDto.isPresent()) {
-            model.addAttribute("post", _postDto.get());
-            return "post/modify";
-        }
+    @GetMapping("/list")
+    public String showList(Model model) {
+        List<PostDto> postDtos = postService.getPosts();
+        model.addAttribute("posts", postDtos);
         return "post/list";
     }
 }

@@ -10,35 +10,56 @@
     <section>
         <div>
             <div>
-                <div>
-                    <button type="button" onclick="history.back();">
-                        <span>이전</span>
-                    </button>
+                <div class="row m-1">
+                    <form th:action="@{/post/list}" method="GET">
+                        <button class="btn btn-secondary mx-1">
+                            <span>목록</span>
+                        </button>
+                    </form>
+                    <form th:action="@{|/post/${post.id}|}" method="#" th:method="DELETE">
+                        <button class="btn btn-secondary mx-1">
+                            <span>삭제</span>
+                        </button>
+                    </form>
+                    <form th:action="@{|/post/updateForm/${post.id}|}" method="GET">
+                        <button class="btn btn-secondary mx-1">
+                            <span>수정</span>
+                        </button>
+                    </form>
                 </div>
-
-                <div>
-                    <h2 th:text="${post.subject}"></h2>
-                </div>
-
-                <div>
-                    <div>
-                        <div>
-                            <div>
-                                <span>작성: </span>
-                                <span th:text="${#temporals.format(post.createDate, 'yy-MM-dd')}"></span>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div>
-                                <span>수정: </span>
-                                <span th:text="${#temporals.format(post.modifyDate, 'yy-MM-dd')}"></span>
-                            </div>
-                        </div>
+                <div class="bg-primary text-white rounded m-2 d-flex justify-content-between align-items-center">
+                    <div class="m-1">
+                        <span th:text="${post.id}"></span>
+                        <span th:text="${post.subject}"></span>
+                    </div>
+                    <div class="m-1">
+                        <span>작성: </span>
+                        <span th:text="${#temporals.format(post.createDate, 'yy-MM-dd')}"></span>
+                        <span>수정: </span>
+                        <span th:text="${#temporals.format(post.modifyDate, 'yy-MM-dd')}"></span>
                     </div>
                 </div>
-
-                <div>
+                <div id="carouselExampleIndicators" class="carousel slide bg-secondary mx-auto" data-bs-ride="carousel" style="width: 600px;">
+                    <div class="carousel-inner mx-auto" style="height: 400px; width: 400px;">
+                        <div class="carousel-item active">
+                            <img th:src="|/images/${post.imageStoreFileName[0]}|" class="d-block w-100" alt="First slide" style="object-fit: fill;">
+                        </div>
+                        <th:block th:each="imgFile, index : ${post.imageStoreFileName}">
+                            <div th:if="${index.index} > 0" class="carousel-item">
+                                <img th:src="|/images/${imgFile}|" class="d-block w-100" style="object-fit: fill;">
+                            </div>
+                        </th:block>
+                    </div>
+                    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+                <div class="m-2">
                     <span th:utext="${post.content}"></span>
                 </div>
             </div>
