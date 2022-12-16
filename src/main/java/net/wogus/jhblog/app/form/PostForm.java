@@ -1,24 +1,22 @@
-package net.wogus.jhblog.app.post.form;
+package net.wogus.jhblog.app.form;
 
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.web.multipart.MultipartFile;
+import lombok.Getter;
 
 import javax.validation.constraints.NotBlank;
 
 @Data
+@Getter
 public class PostForm {
     @NotBlank
     private String subject;
     @NotBlank
     private String content;
-    private MultipartFile imageFile;
 
     @Builder
-    public PostForm(String subject, String content, MultipartFile imageFile) {
+    public PostForm(String subject, String content) {
         this.subject = subject;
         this.content = content;
-        this.imageFile = imageFile;
     }
-
 }

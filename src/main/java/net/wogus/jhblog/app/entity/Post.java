@@ -1,18 +1,17 @@
-package net.wogus.jhblog.app.post.entity;
+package net.wogus.jhblog.app.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import net.wogus.jhblog.app.attachment.entity.Attachment;
 import net.wogus.jhblog.app.base.BaseEntity;
-import net.wogus.jhblog.app.post.dto.PostDto;
+import net.wogus.jhblog.app.dto.PostDto;
 
 import javax.persistence.*;
 
+import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -56,12 +55,16 @@ public class Post extends BaseEntity {
         postDto.setSubject(this.postSubject);
         postDto.setContent(this.postContent);
         postDto.setDeleted(this.isDeleted);
-        postDto.setImageStoreFileName(
-                this.attachments.stream()
-                        .map(Attachment::getStoreFileName)
-                        .collect(Collectors.toSet())
-        );
+        Set<String> imagePaths = new LinkedHashSet<>();
+        for (Attachment attachment : attachments) {
+            imagePaths.add(getFolderName() + "/" + attachment.getStoreFileName());
+        }
+        postDto.setImageStoreFileName(imagePaths);
         return postDto;
+    }
+
+    public String getFolderName() {
+        return this.getCreateDate().format(DateTimeFormatter.ofPattern("yyMMdd"));
     }
 
     public void addAttachment(Attachment attachment) {

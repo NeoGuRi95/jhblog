@@ -1,4 +1,4 @@
-package net.wogus.jhblog.app.post.dto;
+package net.wogus.jhblog.app.dto;
 
 import lombok.Data;
 

@@ -1,14 +1,15 @@
-package net.wogus.jhblog.app.post.controller;
+package net.wogus.jhblog.app.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.wogus.jhblog.app.base.Rq;
-import net.wogus.jhblog.app.post.dto.PostDto;
-import net.wogus.jhblog.app.post.service.PostService;
-import net.wogus.jhblog.app.post.form.PostForm;
+import net.wogus.jhblog.app.dto.PostDto;
+import net.wogus.jhblog.app.service.PostService;
+import net.wogus.jhblog.app.form.PostForm;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -29,8 +30,8 @@ public class PostController {
     }
 
     @PostMapping("/write")
-    public String write(@Valid PostForm postForm) throws IOException {
-        long postId = postService.write(postForm.getSubject(), postForm.getContent(), postForm.getImageFile());
+    public String write(@Valid PostForm postForm, @RequestParam("imageFile") List<MultipartFile> imageFiles) throws IOException {
+        long postId = postService.write(postForm, imageFiles);
         return Rq.redirectWithMsg("/post/" + postId, "%d번 글이 생성되었습니다.".formatted(postId));
     }
 
@@ -45,8 +46,8 @@ public class PostController {
     }
 
     @PatchMapping("/{id}")
-    public String update(@PathVariable Long id, Model model, @Valid PostForm postForm) throws IOException {
-        Optional<PostDto> _postDto = postService.updatePost(id, postForm.getSubject(), postForm.getContent(), postForm.getImageFile());
+    public String update(@PathVariable Long id, Model model, @Valid PostForm postForm, @RequestParam("imageFile") List<MultipartFile> imageFiles) throws IOException {
+        Optional<PostDto> _postDto = postService.updatePost(id, postForm, imageFiles);
         if (_postDto.isPresent()) {
             model.addAttribute("post", _postDto.get());
             return "post/detail";

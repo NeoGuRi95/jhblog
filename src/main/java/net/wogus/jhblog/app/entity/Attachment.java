@@ -1,12 +1,11 @@
-package net.wogus.jhblog.app.attachment.entity;
+package net.wogus.jhblog.app.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import net.wogus.jhblog.app.attachment.dto.AttachmentDto;
+import net.wogus.jhblog.app.dto.AttachmentDto;
 import net.wogus.jhblog.app.base.BaseEntity;
-import net.wogus.jhblog.app.post.entity.Post;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -30,6 +29,8 @@ public class Attachment extends BaseEntity {
     private String orgFileName;
 
     private String storeFileName;
+
+    private boolean isDeleted;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)

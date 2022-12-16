@@ -1,7 +1,7 @@
 package net.wogus.jhblog;
 
-import net.wogus.jhblog.app.post.dto.PostDto;
-import net.wogus.jhblog.app.post.service.PostService;
+import net.wogus.jhblog.app.dto.PostDto;
+import net.wogus.jhblog.app.service.PostService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

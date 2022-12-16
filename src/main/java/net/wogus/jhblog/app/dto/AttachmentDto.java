@@ -1,4 +1,4 @@
-package net.wogus.jhblog.app.attachment.dto;
+package net.wogus.jhblog.app.dto;
 
 import lombok.Builder;
 import lombok.Data;
@@ -13,6 +13,7 @@ public class AttachmentDto {
     private String orgFileName;
     private String storeFileName;
     private long postId;
+    private boolean isDeleted;
 
     @Builder
     public AttachmentDto(String orgFileName, String storePath) {

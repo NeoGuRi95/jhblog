@@ -1,8 +1,8 @@
-package net.wogus.jhblog.app.attachment.controller;
+package net.wogus.jhblog.app.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.wogus.jhblog.app.attachment.FileStore;
+import net.wogus.jhblog.app.util.FileStore;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Controller;
@@ -24,6 +24,6 @@ public class ImageController {
     @ResponseBody
     @GetMapping("/{filename}")
     public Resource processImg(@PathVariable String filename) throws MalformedURLException {
-        return new UrlResource("file:" + fileStore.createPath(filename));
+        return new UrlResource("file:" + fileStore.todayDir() + "/" + filename);
     }
 }

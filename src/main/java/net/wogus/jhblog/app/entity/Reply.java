@@ -1,4 +1,4 @@
-package net.wogus.jhblog.app.post.entity;
+package net.wogus.jhblog.app.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

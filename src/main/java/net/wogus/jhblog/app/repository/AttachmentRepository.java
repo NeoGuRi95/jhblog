@@ -1,6 +1,6 @@
-package net.wogus.jhblog.app.attachment.repository;
+package net.wogus.jhblog.app.repository;
 
-import net.wogus.jhblog.app.attachment.entity.Attachment;
+import net.wogus.jhblog.app.entity.Attachment;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

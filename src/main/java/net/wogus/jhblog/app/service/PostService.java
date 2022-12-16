@@ -1,13 +1,14 @@
-package net.wogus.jhblog.app.post.service;
+package net.wogus.jhblog.app.service;
 
 import lombok.RequiredArgsConstructor;
-import net.wogus.jhblog.app.attachment.FileStore;
-import net.wogus.jhblog.app.attachment.dto.AttachmentDto;
-import net.wogus.jhblog.app.attachment.entity.Attachment;
-import net.wogus.jhblog.app.attachment.repository.AttachmentRepository;
-import net.wogus.jhblog.app.post.dto.PostDto;
-import net.wogus.jhblog.app.post.entity.Post;
-import net.wogus.jhblog.app.post.repository.PostRepository;
+import net.wogus.jhblog.app.form.PostForm;
+import net.wogus.jhblog.app.util.FileStore;
+import net.wogus.jhblog.app.dto.AttachmentDto;
+import net.wogus.jhblog.app.entity.Attachment;
+import net.wogus.jhblog.app.repository.AttachmentRepository;
+import net.wogus.jhblog.app.dto.PostDto;
+import net.wogus.jhblog.app.entity.Post;
+import net.wogus.jhblog.app.repository.PostRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,13 +34,6 @@ public class PostService {
         for (Post post : postList) {
             if (post.isDeleted()) continue;
             PostDto postDto = post.toDto();
-            /*// 대표 이미지 찾기
-            Optional<List<Attachment>> _attachmentList = attachmentRepository.findAllByPostId(postDto.getId());
-            if (_attachmentList.isPresent()) {
-                List<Attachment> attachmentList = _attachmentList.get();
-                Attachment attachment = attachmentList.get(0);
-                postDto.setImageStoreFileName(attachment.getStoreFileName());
-            }*/
             postDtoList.add(postDto);
         }
 
@@ -48,13 +42,14 @@ public class PostService {
 
     /*게시글 저장*/
     @Transactional
-    public long write(String subject, String content, MultipartFile multipartFile) throws IOException {
-        Post post = new Post(subject, content);
-
-        /*썸네일 이미지 저장*/
-        AttachmentDto imageFile = fileStore.storeFile(multipartFile);
-        Attachment attachment = new Attachment(imageFile);
-        post.addAttachment(attachment);
+    public long write(PostForm postForm, List<MultipartFile> imageFiles) throws IOException {
+        Post post = new Post(postForm.getSubject(), postForm.getContent());
+        /*이미지 저장*/
+        List<AttachmentDto> attachmentDtos = fileStore.storeFiles(imageFiles);
+        for (AttachmentDto attachmentDto : attachmentDtos) {
+            Attachment attachment = new Attachment(attachmentDto);
+            post.addAttachment(attachment);
+        }
 
         return postRepository.save(post).getId();
     }
@@ -80,17 +75,19 @@ public class PostService {
 
     /*게시글 수정(제목, 내용)*/
     @Transactional
-    public Optional<PostDto> updatePost(Long id, String subject, String content, MultipartFile multipartFile) throws IOException {
+    public Optional<PostDto> updatePost(Long id, PostForm postForm, List<MultipartFile> imageFiles) throws IOException {
         Optional<Post> _post = postRepository.findById(id);
         PostDto postDto = null;
         if (_post.isPresent()) {
             Post post = _post.get();
-            post.setPostSubject(subject);
-            post.setPostContent(content);
-            /*썸네일 이미지 저장*/
-            AttachmentDto imageFile = fileStore.storeFile(multipartFile);
-            Attachment attachment = new Attachment(imageFile);
-            post.addAttachment(attachment);
+            post.setPostSubject(postForm.getSubject());
+            post.setPostContent(postForm.getContent());
+            /*이미지 저장*/
+            List<AttachmentDto> _imageFiles = fileStore.storeFiles(imageFiles);
+            for (AttachmentDto attachmentDto : _imageFiles) {
+                Attachment attachment = new Attachment(attachmentDto);
+                post.addAttachment(attachment);
+            }
             postDto = post.toDto();
         }
 
