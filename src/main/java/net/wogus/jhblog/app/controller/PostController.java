@@ -4,8 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.wogus.jhblog.app.base.Rq;
 import net.wogus.jhblog.app.dto.PostDto;
+import net.wogus.jhblog.app.service.AttachmentService;
 import net.wogus.jhblog.app.service.PostService;
 import net.wogus.jhblog.app.form.PostForm;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +25,7 @@ import java.util.Optional;
 public class PostController {
 
     private final PostService postService;
+    private final AttachmentService attachmentService;
 
     @GetMapping("/write")
     public String showWrite() {
@@ -68,13 +71,14 @@ public class PostController {
     @DeleteMapping("/{id}")
     public String delete(@PathVariable Long id) {
         postService.updateIsDeletedById(id);
+        attachmentService.updateIsDeletedById(id);
         return "redirect:/post/list";
     }
 
     @GetMapping("/list")
-    public String showList(Model model) {
-        List<PostDto> postDtos = postService.getPosts();
-        model.addAttribute("posts", postDtos);
+    public String showList(Model model, @RequestParam(value="page", defaultValue="0") int page) {
+        Page<PostDto> postDtoPage = postService.getPosts(page);
+        model.addAttribute("paging", postDtoPage);
         return "post/list";
     }
 }

@@ -9,6 +9,10 @@ import net.wogus.jhblog.app.repository.AttachmentRepository;
 import net.wogus.jhblog.app.dto.PostDto;
 import net.wogus.jhblog.app.entity.Post;
 import net.wogus.jhblog.app.repository.PostRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,6 +42,14 @@ public class PostService {
         }
 
         return postDtoList;
+    }
+
+    public Page<PostDto> getPosts(int page) {
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("createDate"));
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
+        Page<Post> postPage = postRepository.findAll(pageable);
+        return new PostDto().toDtoPage(postPage);
     }
 
     /*게시글 저장*/

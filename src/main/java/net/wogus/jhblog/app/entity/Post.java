@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import net.wogus.jhblog.app.base.BaseEntity;
 import net.wogus.jhblog.app.dto.PostDto;
+import net.wogus.jhblog.app.dto.ReplyDto;
 
 import javax.persistence.*;
 
@@ -55,11 +56,12 @@ public class Post extends BaseEntity {
         postDto.setSubject(this.postSubject);
         postDto.setContent(this.postContent);
         postDto.setDeleted(this.isDeleted);
-        Set<String> imagePaths = new LinkedHashSet<>();
-        for (Attachment attachment : attachments) {
-            imagePaths.add(getFolderName() + "/" + attachment.getStoreFileName());
-        }
+        // images
+        Set<String> imagePaths = getImagePathSet();
         postDto.setImageStoreFileName(imagePaths);
+        // replys
+        Set<ReplyDto> replys = getReplyDtoSet();
+        postDto.setReplys(replys);
         return postDto;
     }
 
@@ -70,5 +72,21 @@ public class Post extends BaseEntity {
     public void addAttachment(Attachment attachment) {
         this.attachments.add(attachment);
         attachment.setPost(this);
+    }
+
+    public Set<String> getImagePathSet() {
+        Set<String> imagePathSet = new LinkedHashSet<>();
+        for (Attachment attachment : attachments) {
+            imagePathSet.add(getFolderName() + "/" + attachment.getStoreFileName());
+        }
+        return imagePathSet;
+    }
+
+    public Set<ReplyDto> getReplyDtoSet() {
+        Set<ReplyDto> replyDtoSet = new LinkedHashSet<>();
+        for (Reply reply : this.replys) {
+            replyDtoSet.add(reply.toDto());
+        }
+        return replyDtoSet;
     }
 }
